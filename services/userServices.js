@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const {ApiError} = require('../middlewares/errorMiddleware');
 
 const getAllUsers = async (params) => {
     const {limit, offset, baseUrl} = params;
@@ -14,7 +15,7 @@ const getAllUsers = async (params) => {
         }
     }, queryOptions);
 
-    if(!users) throw new Error('No users exist');
+    if(!users) throw new ApiError(404, 'No users exist');
 
     const newUsers = users.rows.map(user => {
         user.photo = `${baseUrl}/${user.photo}`;
@@ -38,7 +39,7 @@ const getUserById = async (params) => {
         }
     });
 
-    if(!user) throw new Error('User not found');
+    if(!user) throw new ApiError(404, 'User not found');
 
     user.photo = `${baseUrl}/${user.photo}`;
 
@@ -57,7 +58,7 @@ const updateUser = async (params) => {
         }
     );
 
-    if(!update) throw new Error('User Not Found');
+    if(!update) throw new ApiError(404, 'User Not Found');
 
     const user = await User.findOne({
         where:{
@@ -77,7 +78,7 @@ const deleteUser = async (params) => {
         }
     });
 
-    if(!del) throw new Error('User Not Found');
+    if(!del) throw new ApiError(404, 'User Not Found');
 
     return{message: 'Delete user success'};
 

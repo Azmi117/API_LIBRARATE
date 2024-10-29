@@ -1,6 +1,7 @@
 const {User} = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { ApiError } = require('../middlewares/errorMiddleware');
 
 const register = async (params) => {
     const {username, email, password, role, photo} = params;
@@ -11,7 +12,7 @@ const register = async (params) => {
         }
     });
 
-    if(findUser) throw new Error('Email has been registered');
+    if(findUser) throw new ApiError(400, 'Email has been registered');
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -23,7 +24,7 @@ const register = async (params) => {
         photo
     });
 
-    if(!regis) throw new Error('Register Failed');
+    if(!regis) throw new ApiError(500, 'Register Failed');
 
     return regis;
 }
@@ -37,10 +38,10 @@ const login = async (params) => {
         }
     });
 
-    if(!user) throw new Error('User Not Found');
+    if(!user) throw new ApiError(404, 'User Not Found');
 
     const valid = await bcrypt.compare(password, user.password);
-    if(!valid) throw new Error('Invalid Credentials');
+    if(!valid) throw new ApiError(401, 'Invalid Credentials');
 
     const token = jwt.sign({
         id:user.id,

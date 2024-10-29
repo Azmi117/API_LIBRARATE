@@ -1,3 +1,4 @@
+const { ApiError } = require('../middlewares/errorMiddleware');
 const { Review } = require('../models');
 
 const getAllReview = async (params) => {
@@ -9,7 +10,7 @@ const getAllReview = async (params) => {
         }
     });
 
-    if(!reviews) throw new Error('No Review Exist');
+    if(!reviews) throw new ApiError(404, 'No Review Exist');
 
     return reviews;
 }
@@ -24,7 +25,7 @@ const createReview = async (params) => {
         rating
     });
 
-    if(!review) throw new Error('Failed Create Review');
+    if(!review) throw new ApiError(400, 'Failed Create Review');
 
     return review;
 }
@@ -41,7 +42,7 @@ const updateReview = async (params) => {
         }
     );
 
-    if(!review) throw new Error('Failed Update Review');
+    if(!review) throw new ApiError(400, 'Failed Update Review');
 
     const updated = await Review.findOne({
         where:{
@@ -61,7 +62,7 @@ const deleteReview = async (params) => {
         }
     });
 
-    if(!del) throw new Error('Failed Delete Review');
+    if(!del) throw new ApiError(400, 'Failed Delete Review');
 
     return {message: 'Delete Success'};
 }

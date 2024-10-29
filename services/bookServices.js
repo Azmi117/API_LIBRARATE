@@ -1,8 +1,9 @@
 const { Book, User } = require('../models');
 const {Op} = require('sequelize');
+const {ApiError} = require('../middlewares/errorMiddleware');
 
 const getAllBook = async (params) => {
-    const {limit, offset, baseUrl} = params;
+    const {limit, offset, baseUrl, title, genre} = params;
 
     const queryOptions = {
         limit: limit || 10,
@@ -23,7 +24,7 @@ const getAllBook = async (params) => {
     }
 
     const books = await Book.findAndCountAll(queryOptions);
-    if(!books) throw new Error('No Books Exist');
+    if(!books) throw new ApiError(404, 'No Books Exist');
 
     const newBooks = books.rows.map(book => {
         book.photo = `${baseUrl}/${book.photo}`;
@@ -47,7 +48,7 @@ const getBookById = async (params) => {
         }
     });
 
-    if(!book) throw new Error('Book not found');
+    if(!book) throw new ApiError(404, 'Book not found');
 
     book.photo = `${baseUrl}/${book.photo}`;
 
@@ -73,7 +74,7 @@ const createBook = async (params) => {
         upload_by: user.username
     });
 
-    if(!book) throw new Error('Failed to create book');
+    if(!book) throw new ApiError(400, 'Failed to create book');
 
     return book;
 }
@@ -90,7 +91,7 @@ const updateBook = async (params) => {
         }
         );
 
-    if(!updateBook) throw new Error('Book Not Found');
+    if(!updateBook) throw new ApiError(404, 'Book Not Found');
 
     const book = await Book.findOne({
         where:{
@@ -110,7 +111,7 @@ const deleteBook = async (params) =>{
         }
     });
 
-    if(!del) throw new Error('Delete Book Failed');
+    if(!del) throw new ApiError(400, 'Delete Book Failed');
 
     return{message: 'Delete Success'};
 }
