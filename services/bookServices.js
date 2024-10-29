@@ -1,4 +1,5 @@
 const { Book, User } = require('../models');
+const {Op} = require('sequelize');
 
 const getAllBook = async (params) => {
     const {limit, offset, baseUrl} = params;
@@ -6,6 +7,19 @@ const getAllBook = async (params) => {
     const queryOptions = {
         limit: limit || 10,
         offset: offset || 0
+    }
+
+    if(genre){
+        queryOptions.where = {genre};
+    }
+
+    if(title){
+        queryOptions.where = {
+            ...queryOptions.where,
+            title: {
+                [Op.iLike]: `%${title}%`
+            }
+        };
     }
 
     const books = await Book.findAndCountAll(queryOptions);
