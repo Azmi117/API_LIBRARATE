@@ -16,5 +16,5 @@ COPY . .
 # Expose port yang digunakan oleh aplikasi
 EXPOSE 8080
 
-# Tentukan perintah untuk menjalankan aplikasi
-CMD ["node", "app.js"]
+# Tentukan perintah untuk menjalankan migrasi dan aplikasi
+CMD ["sh", "-c", "npx sequelize-cli db:migrate && node app.js"]
