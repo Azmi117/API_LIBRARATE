@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_USERNAME: postgres
+      DB_PASSWORD: azmi123
+      DB_NAME: API_LB2
+      HOST: db
+      DB_DIALECT: postgres
+      JWT_SECRET: Paradi$o101001
+      BASE_URL: http://localhost:8080
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: azmi123
+      POSTGRES_DB: API_LB2
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
