@@ -48,7 +48,10 @@ describe('Book API Integration Tests', () => {
       .field('author', 'Test Author')
       .field('pages', 300)
       .field('sinopsis', 'Test sinopsis')
-      .attach('photo', photoPath); // (ini yang membuat error)
+      .field('country', 'Test country')
+      .attach('photo', photoPath) // (ini yang membuat error)
+      .field('image_3d', 'Test image_3d')
+      .field('image_Title', 'Test image_Title');
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('id');
@@ -86,6 +89,9 @@ describe('Book API Integration Tests', () => {
       .field('author', 'testUser')
       .field('pages', 'test100')
       .field('sinopsis', 'testSinopsis')
+      .field('country', 'testCountry')
+      .field('image_3d', 'testImage_3d')
+      .field('image_Title', 'testImage_Title')
       .attach('photo', photoPath);
 
     expect(response.statusCode).toBe(200);
@@ -94,6 +100,9 @@ describe('Book API Integration Tests', () => {
     expect(response.body.author).toBe('testUser');
     expect(response.body.pages).toBe('test100');
     expect(response.body.sinopsis).toBe('testSinopsis');
+    expect(response.body.country).toBe('testCountry');
+    expect(response.body.image_3d).toBe('testImage_3d');
+    expect(response.body.image_Title).toBe('testImage_Title');
     expect(response.body.photo).toContain('DSCF1751.JPG');
   });
 

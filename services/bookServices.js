@@ -2,12 +2,16 @@ const { Book, User } = require('../models');
 const {Op} = require('sequelize');
 const {ApiError} = require('../middlewares/errorMiddleware');
 
-const getAllBook = async (params) => {
-    const {limit, offset, baseUrl, title, genre} = params;
+const getAllBook = async (params, baseUrl) => {
+    const {title, genre, country, limit, offset} = params;
 
     const queryOptions = {
         limit: limit || 10,
         offset: offset || 0
+    }
+
+    if(country){
+        queryOptions.where = {country};
     }
 
     if(genre){
@@ -27,7 +31,9 @@ const getAllBook = async (params) => {
     if(!books) throw new ApiError(404, 'No Books Exist');
 
     const newBooks = books.rows.map(book => {
-        book.photo = `${baseUrl}/${book.photo}`;
+        if(book.photo){
+            book.photo = `${baseUrl}/${book.photo}`;
+        }
         return book;
     });
 
@@ -56,7 +62,7 @@ const getBookById = async (params) => {
 }
 
 const createBook = async (params) => {
-    const {id, title, genre, author, pages, sinopsis, photo} = params;
+    const {id, title, genre, author, pages, sinopsis, country, image_3d, image_Title, photo} = params;
 
     const user = await User.findOne({
         where:{
@@ -70,8 +76,11 @@ const createBook = async (params) => {
         author,
         pages,
         sinopsis,
+        country,
         photo,
-        upload_by: user.username
+        image_3d,
+        image_Title,
+        upload_by: user.username,
     });
 
     if(!book) throw new ApiError(400, 'Failed to create book');
@@ -80,10 +89,10 @@ const createBook = async (params) => {
 }
 
 const updateBook = async (params) => {
-    const {id, title, genre, author, pages, sinopsis, photo, upload_by} = params;
+    const {id, title, genre, author, pages, sinopsis, country, image_3d, image_Title, photo, upload_by} = params;
 
     const updateBook = await Book.update(
-        {title, genre, author, pages, sinopsis, photo, upload_by},
+        {title, genre, author, pages, sinopsis, country, image_3d, image_Title, photo, upload_by,},
         {
             where:{
                 id

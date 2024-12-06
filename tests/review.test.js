@@ -25,6 +25,9 @@ describe('Review API Integration Tests', () => {
       author: 'Test Author',
       pages: 300,
       sinopsis: 'This is a test book',
+      country: 'Japan',
+      image_3d: 'https://e7.pngegg.com/pngimages/303/593/png-clipart-meliodas-illustration-meliodas-comics-and-fantasy-nanatsu-no-taizai-the-seven-deadly-sins-thumbnail.png',
+      image_Title: 'https://i.pinimg.com/originals/5d/cb/b4/5dcbb41aa1a7396fc85101359fcfda99.png'
     });
 
     // Dapatkan token autentikasi

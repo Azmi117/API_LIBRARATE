@@ -2,18 +2,23 @@ const bookServices = require('../services/bookServices');
 
 const getAllBooks = async (req, res, next) => {
     try{
-        const {limit, page} = req.query;
+        const {genre, title, country, limit, page} = req.query;
+        const parsedLimit = parseInt(limit, 10) || 10; // Default to 10 if NaN
+        const parsedPage = parseInt(page, 10) || 1;
+        
+        
+        const params = {
+            genre,
+            title,
+            country,
+            limit: parsedLimit,
+            offset: (parsedPage - 1) * parsedLimit
+        };
         
         const baseUrl = `${req.protocol}://${req.get('host')}`;
-
-        const params = {
-            limit: parseInt(limit) || 10,
-            offset: (parseInt(page) - 1) * (parseInt(limit) || 10) || 0,
-            baseUrl
-        }
-
-        const books = await bookServices.getAllBook(params);
-        res.status(200).json(books);
+        const bookData = await bookServices.getAllBook(params, baseUrl);
+        
+        res.status(200).json(bookData);
 
     }catch(error){
         next(error);
@@ -38,7 +43,6 @@ const getBookById = async (req, res, next) => {
 
 const createBook = async (req, res, next) => {
     try{
-
         const params = {
             ...req.body,
             id: req.user.id,

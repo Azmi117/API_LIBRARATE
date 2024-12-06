@@ -22,7 +22,10 @@ module.exports = (sequelize, DataTypes) => {
     pages: DataTypes.STRING,
     sinopsis: DataTypes.STRING,
     photo: DataTypes.STRING,
-    upload_by: DataTypes.STRING
+    upload_by: DataTypes.STRING,
+    country: DataTypes.STRING,
+    image_3d: DataTypes.STRING,
+    image_Title: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Book',
