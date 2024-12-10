@@ -7,7 +7,7 @@ const upload = require('../middlewares/multerMiddleware');
 router.get('/', authenticate, userController.getAllUser);
 router.get('/me', authenticate, userController.getOneUser);
 router.get('/:id', authenticate, userController.getUserById);
-router.put('/update/:id', authenticate, upload.single('photo'), userController.updateUser);
+router.put('/update', authenticate, upload.single('photo'), userController.updateUser);
 router.delete('/delete/:id', authenticate, userController.deleteUser);
 
 module.exports = router;

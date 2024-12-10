@@ -54,7 +54,7 @@ const getOneUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try{
         const params = {
-            id: req.params.id,
+            id: req.user.id,
             photo: req.file ? req.file.path.replace(/\\/g, '/') : null,
             ...req.body
         }
