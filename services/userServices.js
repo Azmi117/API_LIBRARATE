@@ -1,19 +1,32 @@
 const { User } = require('../models');
+const {Op} = require('sequelize');
 const {ApiError} = require('../middlewares/errorMiddleware');
 
 const getAllUsers = async (params) => {
-    const {limit, offset, baseUrl} = params;
+    const {username, limit, offset, baseUrl} = params;
 
     const queryOptions = {
         limit: limit || 9,
         offset: offset || 0
     }
 
+    if(username){
+        queryOptions.where = {
+            ...queryOptions.where,
+            username: {
+                [Op.iLike]: `%${username}%`
+            }
+        };
+    }
+
     const users = await User.findAndCountAll({
         where:{
-            role: 'regUser'
-        }
-    }, queryOptions);
+            role: 'regUser',
+            ...queryOptions.where,
+        },
+        limit:queryOptions.limit,
+        offset:queryOptions.offset,
+    });
 
     if(!users) throw new ApiError(404, 'No users exist');
 

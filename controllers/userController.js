@@ -2,22 +2,22 @@ const userServices = require('../services/userServices');
 
 const getAllUser = async (req, res, next) => {
     try{
-        const {limit, page} = req.query;
+        const {username, limit, page} = req.query;
+        const offset = (page - 1) * (limit || 10);
         const baseUrl = `${req.protocol}://${req.get('host')}`;
 
-        const params = {
-            limit: parseInt(limit) || 10,
-            offset: (parseInt(page) - 1) * (parseInt(limit) || 10) || 0,
-            baseUrl
-        }
-
-        const users = await userServices.getAllUsers(params);
+        const users = await userServices.getAllUsers({
+            username, // Teruskan username ke service
+            limit: Number(limit),
+            offset: Number(offset),
+            baseUrl,   
+        });
         res.status(200).json(users);
 
     }catch(error){
         next(error);
     }
-}
+};
 
 const getUserById = async (req, res, next) => {
     try{

@@ -57,7 +57,7 @@ describe('User API Integration Tests', () => {
     const photoPath = path.join(__dirname, 'uploads', 'DSCF1751.JPG');
   
     const response = await request(app)
-      .put(`/api/user/update/${testUser.id}`)
+      .put(`/api/user/update`)
       .set('Authorization', `Bearer ${token}`)
       .field('username', 'updatedUser')
       .field('email', 'updateduser@example.com')
