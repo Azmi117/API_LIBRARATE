@@ -22,7 +22,7 @@ module.exports = {
   },
   production: {
     use_env_variable: 'DATABASE_PUBLIC_URL',
-    dialect: 'postgres',
+    dialect: process.env.DB_DIALECT,
     dialectOptions: {
       ssl: {
         require: true,
