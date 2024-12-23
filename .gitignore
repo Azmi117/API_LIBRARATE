@@ -1,3 +1,6 @@
 node_modules
 .env
 Dokumentasi.txt
+Dockerfile
+docker-compose.yml
+.dockerignore
