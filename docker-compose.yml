@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: development  # Menggunakan environment development
+      DB_USERNAME: postgres
+      DB_PASSWORD: azmi123
+      DB_NAME: API_LB2  # Gunakan database API_LB2 untuk pengembangan
+      HOST: db
+      DB_DIALECT: postgres
+      JWT_SECRET: 'Paradi$o101001'
+      BASE_URL: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    # CMD sudah dijalankan di Dockerfile, jadi tidak perlu command tambahan di sini
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: test  # Menggunakan environment test untuk testing
+      DB_USERNAME: postgres
+      DB_PASSWORD: azmi123
+      DB_NAME: API_LB2_test  # Gunakan database API_LB2_TEST untuk pengujian
+      HOST: db
+      DB_DIALECT: postgres
+      JWT_SECRET: 'Paradi$o101001'
+      BASE_URL: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["sh", "-c", "npm run testsetup && npm test"]  # Menjalankan testing dengan perintah yang spesifik
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: azmi123
+      POSTGRES_DB: API_LB2
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
