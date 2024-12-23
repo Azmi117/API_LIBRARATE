@@ -8,10 +8,10 @@
     "testdrop": "cross-env NODE_ENV=test sequelize db:drop",
     "testsetup": "sh -c 'if ! psql -h $HOST -U $DB_USERNAME -d $DB_NAME -c \"\\q\" 2>/dev/null; then npm run db:create && npm run db:migrate:test; else echo \"Test Database already exists\"; fi'",
     "db:migrate:test": "cross-env NODE_ENV=test sequelize db:migrate",
-    "setup": "NODE_ENV=production sh -c 'echo \"Checking DB connection...\" && psql -h $HOST -U $DB_USERNAME -d $DB_NAME -c \"\\q\" && echo \"DB connected.\" || (echo \"Creating database...\" && npm run db:create); npm run db:migrate'",
+    "setup": "sh -c 'echo \"Checking DB connection...\" && psql -h $HOST -U $DB_USERNAME -d $DB_NAME -c \"\\q\" && echo \"DB connected.\" || (echo \"Creating database...\" && npm run db:create); npm run db:migrate'",
     "db:migrate": "cross-env NODE_ENV=development sequelize db:migrate",
     "db:create": "cross-env NODE_ENV=development sequelize db:create",
-    "start": "NODE_ENV=production nodemon server"
+    "start": "nodemon server"
   }
   ,
   "keywords": [],
